@@ -29,15 +29,15 @@ def loadFile(fileName, sampleTimes):
 def loadTestData(filename, dataList, labelList, labelID):
     #testSampleTimes = [100]; 
     #testSampleTimes = range(50, 200, 5)
-    testSampleTimes = range(50, 100, 5)
-    testSampleTimes.sort(); 
+    testSampleTimes = sorted(range(50, 100, 5))
+    # testSampleTimes.sort(); 
     data = loadFile(filename, testSampleTimes);
     for dataID in data: 
         dataList.append(dataID); 
         labelList.append(labelID);
     #return dataList, labelList
 
-trainingFiles = ["201106050941_board_setPoint_500V_fan_setPoint_060_mfc_setPoint_Toluene_200ppm_p7",
+trainingFiles = ["data/201106050941_board_setPoint_500V_fan_setPoint_060_mfc_setPoint_Toluene_200ppm_p7",
                  "201105101707_board_setPoint_500V_fan_setPoint_060_mfc_setPoint_Benzene_200ppm_p7",
                  "201102200930_board_setPoint_500V_fan_setPoint_060_mfc_setPoint_Methane_1000ppm_p7",
                  "201012081822_board_setPoint_500V_fan_setPoint_060_mfc_setPoint_CO_1000ppm_p7",
@@ -59,7 +59,7 @@ for filename in trainingFiles[0:1]:
     loadTestData(path+filename, plumeData, plumeDataLabels, currentOdorID);
                      
 outputFile = 'plumeData.pi'; 
-pickleOut = open(outputFile, 'w'); 
-pickle.dump(plumeData, pickleOut);
-pickle.dump(plumeDataLabels, pickleOut);
+pickleOut = open(outputFile, 'wb'); 
+pickle.dump(plumeData, pickleOut, protocol=2);
+pickle.dump(plumeDataLabels, pickleOut, protocol=2);
 pickleOut.close(); 

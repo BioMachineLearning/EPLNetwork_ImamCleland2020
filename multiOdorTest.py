@@ -2,18 +2,33 @@ from lib import epl
 from lib import OSN
 from lib import readout
 from lib import plots
+import time
 import numpy as np
-import pickle 
+import pickle
 
-#Load Data
-rf = open('./data/multiOdorTest.pi', 'r');
-trainingOdors = np.array(pickle.load(rf));
-testOdors = np.array(pickle.load(rf));
+# Fixing broken pickle file, and load data
+# filepath = './data/multiOdorTest.pi'
+# data = open(filepath).read().replace('\r\n', '\n') # read and replace file contents
+# dst = filepath + ".tmp"
+# open(dst, "w").write(data) # save a temporary file
+
+dst = './data/multiOdorTest_100s.pi'
+rf = open(dst, "rb")
+trainingOdors = np.array(pickle.load(rf))#, encoding='latin1')
+testOdors = np.array(pickle.load(rf))#, encoding='latin1')
 rf.close();
+
+# #Load Data
+# rf = open('./data/multiOdorTest.pi', 'r');
+# trainingOdors = np.array(pickle.load(rf));
+# testOdors = np.array(pickle.load(rf));
+# rf.close();
 nOdors = len(trainingOdors); 
 nTestPerOdor = len(testOdors)/nOdors;  
 print("Number of odors to train = " + str(len(trainingOdors))); 
 print("Number of odors to test = " + str(len(testOdors))); 
+
+# exit()
 
 #Network initialization
 nMCs = len(trainingOdors[0]); 
@@ -54,3 +69,4 @@ plots.plotFigure4a(epl.gammaCode);
 plots.plotFigure4b(sMatrix); 
 plots.plotFigure4d(epl.gammaCode, sMatrix); 
 
+print("done")

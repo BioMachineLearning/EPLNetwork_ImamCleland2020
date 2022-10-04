@@ -1,3 +1,5 @@
+# Run with Python 2.7
+
 from lib import epl 
 from lib import OSN
 from lib import readout
@@ -5,14 +7,38 @@ from lib import plots
 import numpy as np
 import pickle 
 
-#Load Data
-rf = open('./data/plumePlusImpulseNoiseData.pi', 'r');
-trainingOdors = np.array(pickle.load(rf));
-testOdors = np.array(pickle.load(rf));
-testOdorLabels = pickle.load(rf); 
+# Fixing broken pickle file, and load data
+# filepath = './data/plumePlusImpulseNoiseData.pi'
+# data = open(filepath).read().replace('\r\n', '\n') # read and replace file contents
+# dst = filepath + ".tmp"
+# open(dst, "w").write(data) # save a temporary file
+
+dst = './data/plumePlusImpulseNoiseData_018ss.pi'
+dst = './data/plumePlusImpulseNoiseData_100s.pi'
+rf = open(dst, "rb")
+trainingOdors = np.array(pickle.load(rf))#, encoding='latin1')
+testOdors = np.array(pickle.load(rf))#, encoding='latin1')
+rf.close();
+
+rf = open(dst, 'r')
+trainingOdors = np.array(pickle.load(rf))
+testOdors = np.array(pickle.load(rf))
+testOdorLabels = pickle.load(rf);
 nNoise = pickle.load(rf); 
 nSniffsPerPlume = pickle.load(rf);
-rf.close();
+
+print(testOdorLabels)
+
+rf.close()
+
+# #Load Data
+# rf = open('./data/plumePlusImpulseNoiseData.pi', 'r');
+# trainingOdors = np.array(pickle.load(rf));
+# testOdors = np.array(pickle.load(rf));
+# testOdorLabels = pickle.load(rf); 
+# nNoise = pickle.load(rf); 
+# nSniffsPerPlume = pickle.load(rf);
+# rf.close();
 trainingOdors = trainingOdors;
 testOdors = testOdors; 
 nTrainSamplesPerOdor = 1; 
@@ -49,3 +75,4 @@ sMatrix = readout.readoutPlume(epl.gammaCode, nOdors, testOdorLabels, nSniffsPer
 #Plot
 plots.plotFigure5def(epl.gammaSpikes, sMatrix, nSniffsPerPlume); 
 
+print("done")

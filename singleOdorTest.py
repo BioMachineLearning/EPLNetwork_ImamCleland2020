@@ -5,11 +5,22 @@ from lib import plots
 import numpy as np
 import pickle 
 
-#Load Data
-rf = open('./data/singleOdorData.pi', 'r');
-trainingOdors = np.array(pickle.load(rf));
-testOdors = np.array(pickle.load(rf));
-rf.close();
+# Fixing broken pickle file, and load data
+filepath = './data/singleOdorData.pi'
+data = open(filepath).read().replace('\r\n', '\n') # read and replace file contents
+dst = filepath + ".tmp"
+open(dst, "w").write(data) # save a temporary file
+
+rf = open(dst, "rb")
+trainingOdors = np.array(pickle.load(rf))#, encoding='latin1')
+testOdors = np.array(pickle.load(rf))#, encoding='latin1')
+rf.close()
+
+# #Load Data
+# rf = open('./data/singleOdorData.pi', 'r');
+# trainingOdors = np.array(pickle.load(rf));
+# testOdors = np.array(pickle.load(rf));
+# rf.close();
 nOdors = len(trainingOdors); 
 nTestPerOdor = len(testOdors)/nOdors;  
 print("Number of odors to train = " + str(len(trainingOdors))); 
@@ -50,3 +61,4 @@ sMatrix = readout.readout(epl.gammaCode, nOdors, nTestPerOdor)
 plots.plotFigure3b(epl.gammaCode); 
 plots.plotFigure3d(sMatrix); 
 
+print("done")

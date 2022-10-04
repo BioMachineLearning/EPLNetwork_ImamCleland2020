@@ -27,7 +27,9 @@ def plotFigure3b(gammaCode):
             plt.yticks([15, 30, 45, 60]); 
     plt.xlabel('Timesteps');
     plt.ylabel('MC Index');
-    plt.show(); 
+    # plt.show(); 
+    plt.savefig("results/fig_3b.png", dpi=300)
+
 
 def plotFigure3d(sMatrix): 
     bar1_x, bar2_x = [], [];      
@@ -58,7 +60,9 @@ def plotFigure3d(sMatrix):
     plt.ylabel('Similarity', fontsize=fsize); 
     plt.xlabel('Gamma Cycle', fontsize=fsize);
     plt.title("Similarity of occluded toluene to learned toluene", fontsize=fsize); 
-    plt.show()
+    # plt.show()
+    plt.savefig("results/fig_3d.png", dpi=300)
+
 
 def plotFigure4a(gammaCode): 
     plt.figure(1, figsize=(6, 20))
@@ -91,7 +95,9 @@ def plotFigure4a(gammaCode):
             plt.yticks([15, 30, 45, 60]); 
     plt.xlabel('Timesteps');
     plt.ylabel('MC Index');  
-    plt.show(); 
+    # plt.show(); 
+    plt.savefig("results/fig_4a.png", dpi=300)
+
 
 def plotFigure4b(sMatrix): 
     bar1_x, bar2_x, bar3_x, bar4_x, bar5_x = [], [], [], [], [];      
@@ -132,7 +138,9 @@ def plotFigure4b(sMatrix):
     plt.ylabel('Similarity', fontsize=fsize); 
     plt.xlabel('Gamma Cycles', fontsize=fsize); 
     plt.title("Figure 4b")
-    plt.show()
+    # plt.show()
+    plt.savefig("results/fig_4b.png", dpi=300)
+
 
 def plotFigure4d(gammaCode, sMatrix): 
     fig, axs = plt.subplots(figsize=(18,9));
@@ -184,7 +192,9 @@ def plotFigure4d(gammaCode, sMatrix):
             plt.ylabel('Similarity', fontsize=fsize2); 
         else:
             plt.xticks([]);
-    plt.show() 
+    # plt.show() 
+    plt.savefig("results/fig_4d.png", dpi=300)
+
 
 def findRasterDataPlume(gammaSpikes, sniffIDs):
     MCidList = [];
@@ -253,6 +263,8 @@ def plotFigure5def(gammaSpikes, sMatrix, plumeThetaCycles):
     plt.yticks([]);
     plt.title("Figure 5d-f");
     #plt.gcf().subplots_adjust(top=0.15)
+    plt.savefig("results/fig_5d-f.png", dpi=300)
+    plt.close()
 
 def plotFigure5g(gammaCode, sMatrix): 
     plt.figure(3); 
@@ -303,5 +315,8 @@ def plotFigure5g(gammaCode, sMatrix):
             plt.ylabel('Similarity', fontsize=fsize2); 
         else:
             plt.xticks([]);
-    plt.show() 
+    # plt.show()
+    plt.savefig("results/fig_5g.png", dpi=300)
+    plt.close()
+
 
