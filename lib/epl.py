@@ -1,8 +1,15 @@
-import MCs
-import GCs
+# Original Authors:
+# Imam, Nabil; Cleland, Thomas [tac29 at cornell.edu];
+# 2020
+# https://senselab.med.yale.edu/ModelDB/showmodel.cshtml?model=261864#tabs-1
+# 
+# Modified by Nik Dennler, 2022, n.dennler2@herts.ac.uk
 
 class EPL():
     def __init__(self, nMCs = 10, nGCs = 20, GCsPerNeurogenesis=5, gamma_period = 40):
+        import MCs
+        import GCs
+
         self.timestamp = 0; 
         self.nMCs = nMCs
         self.nGCs = nGCs

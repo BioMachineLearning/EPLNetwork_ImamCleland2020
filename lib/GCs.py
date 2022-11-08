@@ -1,9 +1,17 @@
+# Original Authors:
+# Imam, Nabil; Cleland, Thomas [tac29 at cornell.edu];
+# 2020
+# https://senselab.med.yale.edu/ModelDB/showmodel.cshtml?model=261864#tabs-1
+# 
+# Modified by Nik Dennler, 2022, n.dennler2@herts.ac.uk
+
 import neuron
 import numpy as np
-np.random.seed(1); 
+np.random.seed(1)
 
 class GC():
-    def __init__(self, nMCs, idx):   
+    def __init__(self, nMCs, idx):
+        np.random.seed(1);    # For keeping the simulation reproducible across subsequent experiment
         self.id = idx;
         self.GC = neuron.iaf();
         self.GCselectivity = 4;
@@ -114,6 +122,7 @@ class GClayer():
                     self.GCs[GC_index].MC_delay[(i, j)] = delays[j]; 
                                    
     def connect_all(self, nMCs):
+        print("Testing random-seed: ", np.random.rand()) # For checking reproducibility
         for i in range(0, len(self.GCs)):
             self.connect_GC(i, nMCs);
 
