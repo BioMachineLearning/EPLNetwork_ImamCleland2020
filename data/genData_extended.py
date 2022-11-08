@@ -15,7 +15,6 @@ import random
 import copy
 import matplotlib.pyplot as plt
 
-
 def loadFile(fileName, time_sample):
     """
     Load data points of a given data file and point in time
@@ -381,95 +380,3 @@ if __name__ == '__main__':
             plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, experiment_name)
 
         print("Done")
-
-
-        # if not TEST_ON_CONTROL:
-        #     # Test on same sample as trained
-        #     testOdors = AddOcclusion(trainingOdors_paper, n=nTest, pList=noiseLevels)
-
-            
-        # else:
-        #     # Test on different sample than trained
-
-        #     # Extract data used as control
-        #     odors_raw_control, odorLabels, odorSampleTimes = loadData_control(time_sample=int(TIME_SAMPLE)) 
-        #     odors_raw_baseline, odorLabels_baseline, odorSampleTimes_baseline = loadData_control(time_sample=0) 
-
-            
-        #     if OFFSET_SUBTRACTION:
-        #         odors_raw_control = offset_subtraction(odors_raw_control, odors_raw_baseline)
-
-        #     # Binning and sparsification. IMPORTANT: Use bins from training set, else those results get worse.
-        #     # nBins = 16 
-        #     # dRange, binSpacing = findBinSpacing(odors_raw_control, nBins)
-        #     odorsDense = binData(odors_raw_control, binSpacing, dRange, nBins) 
-        #     odors_control = sparsifyOdors(odorsDense) 
-                                
-        #     #Training and test odors
-        #     odorIds = [3, 2, 1, 0, 4, 5, 6, 7, 8, 9] 
-        #     #odorIds = [3] 
-        #     nsensors = len(odors_control[0]) 
-
-        #     # Create pseudo-training set (we won't actually train on this)
-        #     nTrainingCycles = 1 
-        #     trainingOdors_control = [] 
-        #     for i in odorIds:
-        #         trainingOdors_control.append(copy.deepcopy(odors_control[i])) 
-        #     nOdors = len(trainingOdors_control)
-
-
-        #     testOdors = AddOcclusion(trainingOdors_control, n=nTest, pList=noiseLevels)
-
-        # odors_raw_training = [array for array in odors_training]
-        # odors_raw_testing = [array for array in odors_training]
-        
-
-        # wf = open("./multiOdorTest_018s.pi", 'wb')
-        # wf = open("./pickle_files_testing/multiOdorTest_noise" + str(NOISE_LEVEL) + "_" + TIME_SAMPLE + "s_SO_" + str(OFFSET_SUBTRACTION) + "_controltest" + str(TEST_ON_CONTROL) + ".pi", 'wb')
-        # wf = open("./pickle_files_samebinning/multiOdorTest_noise" + str(NOISE_LEVEL) + "_" + TIME_SAMPLE_TRAIN + "s_" + TIME_SAMPLE_TEST + "s_SO_" + str(OFFSET_SUBTRACTION) + "_controltest" + str(SEPARATE_TRAIN_TEST) + ".pi", 'wb')
-
-    # ________
-    #     continue
-
-    # exit()
-
-
-    # for SAME_BINS in [True]:
-    #     for OFFSET_SUBTRACTION in [True]:
-    #         for SEPARATE_TRAIN_TEST in [False]:
-    #             for TIME_SAMPLE_TRAIN, TIME_SAMPLE_TEST in zip(["090"], ["090"]):
-    #                 for NOISE_LEVEL in [0.2]:                    
-            # for SEPARATE_TRAIN_TEST in [True, False]:
-            #     for TIME_SAMPLE_TRAIN, TIME_SAMPLE_TEST in zip(["090", "090", "015"], ["090", "050", "015"]):
-            #         for NOISE_LEVEL in [0, 0.6]:
-        
-        # prev_train = 0
-        # prev_test = 0
-        # # for SAME_BINS in [True, False]:
-        # # SAME_BINS = False
-        # # SAME_BINS = True
-        # for OFFSET_SUBTRACTION in [False]:
-        #     for SEPARATE_TRAIN_TEST in [False]:
-        #         for TIME_SAMPLE_TRAIN, TIME_SAMPLE_TEST in zip(["015"], ["015"]):
-        #             for NOISE_LEVEL in [0.6]:
-                        # for OFFSET_SUBTRACTION in [False]:
-        #     # for TEST_ON_CONTROL in [False, True]:
-        #     # for SEPARATE_TRAIN_TEST in [True, False]:
-        #     #     for TIME_SAMPLE in ["090", "015"]:
-        #     #         for NOISE_LEVEL in [0.06, 0.6]:
-        #     for SEPARATE_TRAIN_TEST in [False]:
-            # for SEPARATE_TRAIN_TEST in [False, True]:
-                # for TIME_SAMPLE_TRAIN, TIME_SAMPLE_TEST in zip(["015"], ["015"]):
-                    # for NOISE_LEVEL in [0.6]:
-
-    # def get_gas_files(data_dir, gas, time_sample, n_samples=10):
-    #     raw_all = []
-    #     filenames = find_gas_file(data_dir, gas=gas)
-    #     # print(filenames)
-    #     # randomly select n_samples
-    #     for i in range(n_samples):
-    #         filename = random.choice(filenames)
-    #         raw, time = loadFile(filename, time_sample=time_sample)
-    #         raw_all.append(raw)
-        
-    #     return raw_all
