@@ -1,3 +1,11 @@
+# Original Authors:
+# Imam, Nabil  Cleland, Thomas [tac29 at cornell.edu]
+# 2020
+# https://senselab.med.yale.edu/ModelDB/showmodel.cshtml?model=261864#tabs-1
+# 
+# Modified by Nik Dennler, October 2022, n.dennler2@herts.ac.uk
+# 
+
 import numpy as np
 
 def jaccardSimilarity(l1 = [], l2 =[]):
@@ -118,7 +126,7 @@ def readout(gammaCode, nOdors, nTestPerOdor):
     pValues = findPrediction(SImatrix, nTotalTests, nGammaPerOdor=5); 
     odorClassification, netClassification = computeClassification(pValues, nOdors, nTestPerOdor)
     #return learnedGammaCode, SImatrix, pValues, odorClassification, netClassification;        
-    return SImatrix
+    return SImatrix, odorClassification, netClassification
 
 def readoutPlume(gammaCode, nOdors, odorLabels, nSniffsPerPlume=10):
     nTrainSamplesPerOdor = 1; 

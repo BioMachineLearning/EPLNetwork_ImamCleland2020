@@ -310,7 +310,7 @@ if __name__ == '__main__':
         SAME_BINS = True
         VISUALISE_DATA = True
 
-        experiment_name = str(NOISE_LEVEL) + "_" + TIME_SAMPLE_TRAIN + "s_" + TIME_SAMPLE_TEST + "s_SO_" + str(OFFSET_SUBTRACTION) + "_controltest" + str(SEPARATE_TRAIN_TEST) + "_samebins" + str(SAME_BINS)
+        experiment_name = "_noise" + str(NOISE_LEVEL) + "_" + TIME_SAMPLE_TRAIN + "s_" + TIME_SAMPLE_TEST + "s_SO_" + str(OFFSET_SUBTRACTION) + "_controltest" + str(SEPARATE_TRAIN_TEST) + "_samebins" + str(SAME_BINS)
         print(experiment_name)
         random.seed(1)
 
@@ -371,7 +371,7 @@ if __name__ == '__main__':
         else:
             testingOdors = testingOdors
 
-        wf = open("./pickle_files/multiOdorTest_noise" + experiment_name + ".pi", 'wb')
+        wf = open("./pickle_files/multiOdorTest" + experiment_name + ".pi", 'wb')
         pickle.dump(trainingOdors, wf, protocol=2) 
         pickle.dump(testingOdors, wf, protocol=2)
         wf.close()
