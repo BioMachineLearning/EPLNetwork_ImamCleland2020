@@ -19,16 +19,18 @@ from lib import plots
 import pickle
 
 pickle_files = './pickle_files'
+# pickle_files = './pickle_files_cleverclassifier'
 
 print(os.path.isdir(pickle_files))
 
 # Iterate over pickle_files with training/testing data for all experiments
 for file in os.listdir(pickle_files):
+
     if file[0]=='.':
         continue
     dst = pickle_files + "/" + file
     print(dst)
-    results_dir = "./results/" + file[:-3] + "/"
+    results_dir = "./results_epl/" + file[:-3] + "/"
     print(results_dir)
     if not os.path.exists(results_dir):
         os.mkdir(results_dir)
@@ -69,14 +71,16 @@ for file in os.listdir(pickle_files):
         sniff(trainingOdors[i], learn_flag=1)
         epl.GClayer.invokeNeurogenesis()
         sniff(trainingOdors[i], learn_flag=0)
-
+    t2 = time.time()
     #Testing
     for i in range(0, len(testOdors)):
         sniff(testOdors[i], learn_flag=0)
         if(i%10==0 and i!=0):
             print(str(i) + " odors tested")
-    t2 = time.time()
-    print("Simulation Duration = " + str(t2-t1) + "s")
+    t3 = time.time()
+    print("Simulation Duration = " + str(t3-t1) + "s")
+    print("Training Duration = " + str(t2-t1) + "s")
+    print("Testing Duration = " + str(t3-t2) + "s")
 
     #Readout
     sMatrix, odorClassification, netClassification = readout(epl.gammaCode, nOdors, nTestPerOdor)  
@@ -95,5 +99,7 @@ for file in os.listdir(pickle_files):
     print("done")
     print(odorClassification)
     print(netClassification)
+
+    exit()
 
 
