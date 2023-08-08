@@ -1,4 +1,8 @@
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+new_rc_params = {"text.usetex": False, "svg.fonttype": "none"}
+mpl.rcParams.update(new_rc_params)
+import numpy as np
 
 def plotFigure3b(gammaCode): 
     plt.figure(1, figsize=(6, 20))
@@ -64,7 +68,7 @@ def plotFigure3d(sMatrix):
     plt.savefig("results/fig_3d.png", dpi=300)
 
 
-def plotFigure4a(gammaCode): 
+def plotFigure4a(gammaCode, results_dir): 
     plt.figure(1, figsize=(6, 20))
     nGamma = 5; 
     nMCs = 72; 
@@ -96,10 +100,13 @@ def plotFigure4a(gammaCode):
     plt.xlabel('Timesteps');
     plt.ylabel('MC Index');  
     # plt.show(); 
-    plt.savefig("results/fig_4a.png", dpi=300)
+    # plt.savefig("results/fig_4a.png", dpi=300)
+    plt.savefig(results_dir + "fig_4a.png", dpi=300)
+    plt.savefig(results_dir + "fig_4a.svg")
+    plt.close()
 
 
-def plotFigure4b(sMatrix): 
+def plotFigure4b(sMatrix, results_dir): 
     bar1_x, bar2_x, bar3_x, bar4_x, bar5_x = [], [], [], [], [];      
     bar1_y, bar2_y, bar3_y, bar4_y, bar5_y = [], [], [], [], [];      
     nGamma = 5; 
@@ -139,10 +146,12 @@ def plotFigure4b(sMatrix):
     plt.xlabel('Gamma Cycles', fontsize=fsize); 
     plt.title("Figure 4b")
     # plt.show()
-    plt.savefig("results/fig_4b.png", dpi=300)
+    # plt.savefig("results/fig_4b.png", dpi=300)
+    plt.savefig(results_dir +  "fig_4b.png", dpi=300)
+    plt.savefig(results_dir + "fig_4b.svg")
+    plt.close()
 
-
-def plotFigure4d(gammaCode, sMatrix): 
+def plotFigure4d(gammaCode, sMatrix, results_dir): 
     fig, axs = plt.subplots(figsize=(18,9));
     fig.suptitle("Figure 4d", fontsize=16); 
     sampleNumbers = [0, 0, 0, 0, 0, 9, 0, 0, 0, 1]; 
@@ -193,7 +202,10 @@ def plotFigure4d(gammaCode, sMatrix):
         else:
             plt.xticks([]);
     # plt.show() 
-    plt.savefig("results/fig_4d.png", dpi=300)
+    # plt.savefig("results/fig_4d.png", dpi=300)
+    plt.savefig(results_dir + "fig_4d.png", dpi=300)
+    plt.savefig(results_dir + "fig_4d.svg")
+    plt.close()
 
 
 def findRasterDataPlume(gammaSpikes, sniffIDs):
@@ -320,3 +332,109 @@ def plotFigure5g(gammaCode, sMatrix):
     plt.close()
 
 
+
+def plot_similarity_comparison(sMatrix_all, experiments, results_dir): 
+    # Python 3
+    fix, ax = plt.subplots(figsize=(18/1.4, 5/1.4))
+    xticks = []
+    xtick_labels = []
+    for i, (sMatrix, experiment) in enumerate(zip(sMatrix_all, experiments)):
+        bar1_x, bar2_x, bar3_x, bar4_x, bar5_x = [], [], [], [], []; 
+        bar1_e, bar2_e, bar3_e, bar4_e, bar5_e = [], [], [], [], []; 
+             
+        bar1_y, bar2_y, bar3_y, bar4_y, bar5_y = [], [], [], [], [];    
+        bar1_q25, bar2_q25, bar3_q25, bar4_q25, bar5_q25 = [], [], [], [], [];    
+        bar1_q75, bar2_q75, bar3_q75, bar4_q75, bar5_q75 = [], [], [], [], [];    
+          
+        # nGamma = 5;
+        n_test = 10
+        gamma = 5; 
+        testOdorID = 0;              #sniff ID of test odor 
+        # for i in range(0, nGamma):
+        # for i in range(nGamma-1, nGamma):
+        test1_gamma = sMatrix[gamma-1:(testOdorID+1)*(gamma)*n_test:gamma]
+        # print(toluene_gamma5.shape)
+        # exit()
+        bars = np.median(test1_gamma,axis=0)
+        std = np.std(test1_gamma, axis=0)
+        q25 = np.median(test1_gamma, axis=0) - np.quantile(test1_gamma, axis=0, q=0.25)
+        q75 = - np.median(test1_gamma, axis=0) + np.quantile(test1_gamma, axis=0, q=0.75)
+
+        bar1_y.append(bars[0]);  # Toluene
+        bar2_y.append(bars[4]);  # Ammonia
+        bar3_y.append(bars[5]);  # Acetone
+        bar4_y.append(bars[1]);  # Benzene
+        bar5_y.append(bars[2]);  # Methane
+
+
+        bar1_e.append(std[0]);  # Toluene
+        bar2_e.append(std[4]);  # Ammonia
+        bar3_e.append(std[5]);  # Acetone
+        bar4_e.append(std[1]);  # Benzene
+        bar5_e.append(std[2]);  # Methane
+        bar1_q25.append(q25[0]);  # Toluene
+        bar2_q25.append(q25[4]);  # Ammonia
+        bar3_q25.append(q25[5]);  # Acetone
+        bar4_q25.append(q25[1]);  # Benzene
+        bar5_q25.append(q25[2]);  # Methane
+        bar1_q75.append(q75[0]);  # Toluene
+        bar2_q75.append(q75[4]);  # Ammonia
+        bar3_q75.append(q75[5]);  # Acetone
+        bar4_q75.append(q75[1]);  # Benzene
+        bar5_q75.append(q75[2]);  # Methane
+
+        # bar1_y.append(sMatrix[testOdorID+Gamma-1][0]);  # Toluene
+        # bar2_y.append(sMatrix[testOdorID+Gamma-1][4]);  # Ammonia
+        # bar3_y.append(sMatrix[testOdorID+Gamma-1][5]);  # Acetone
+        # bar4_y.append(sMatrix[testOdorID+Gamma-1][1]);  # Benzene
+        # bar5_y.append(sMatrix[testOdorID+Gamma-1][2]);  # Methane
+        
+        w = 0.15        #width of bars
+        fsize = 14;
+
+        # for i in range(0, 5):    
+        # for i in range(nGamma-1, nGamma):
+        bar1_x.append(i-2*w)
+        bar2_x.append(i-w);
+        bar3_x.append(i);
+        bar4_x.append(i+w); 
+        bar5_x.append(i+2*w);     
+        xticks.append(i)
+        # xtick_labels.append(str(i+1))
+        xtick_labels.append(experiment)
+        
+        
+        fig = plt.subplot(111)
+        opacity = 0.5; 
+        # bar1 = ax.bar(np.expand_dims(bar1_x[0], axis=-1), np.expand_dims(bar1_y[0], axis=-1), yerr=np.expand_dims([bar1_q25[0], bar1_q75[0]], axis=-1), width = w, color = 'blue', alpha = opacity, align='center')
+        # bar2 = ax.bar(np.expand_dims(bar2_x[0], axis=-1), np.expand_dims(bar2_y[0], axis=-1), yerr=np.expand_dims([bar2_q25[0], bar2_q75[0]], axis=-1), width = w, color = 'violet', alpha = opacity, align='center')
+        # bar3 = ax.bar(np.expand_dims(bar3_x[0], axis=-1), np.expand_dims(bar3_y[0], axis=-1), yerr=np.expand_dims([bar3_q25[0], bar3_q75[0]], axis=-1), width = w, color = 'red', alpha = opacity, align='center')
+        # bar4 = ax.bar(np.expand_dims(bar4_x[0], axis=-1), np.expand_dims(bar4_y[0], axis=-1), yerr=np.expand_dims([bar4_q25[0], bar4_q75[0]], axis=-1), width = w, color = 'orange', alpha = opacity, align='center')
+        # bar5 = ax.bar(np.expand_dims(bar5_x[0], axis=-1), np.expand_dims(bar5_y[0], axis=-1), yerr=np.expand_dims([bar5_q25[0], bar5_q75[0]], axis=-1), width = w, color = 'green', alpha = opacity, align='center')
+
+        bar1 = ax.bar(bar1_x, bar1_y, width = w, color = 'blue', alpha = opacity, align='center')
+        bar2 = ax.bar(bar2_x, bar2_y, width = w, color = 'violet', alpha = opacity, align='center')
+        bar3 = ax.bar(bar3_x, bar3_y, width = w, color = 'red', alpha = opacity, align='center')
+        bar4 = ax.bar(bar4_x, bar4_y, width = w, color = 'orange', alpha=opacity, align='center')
+        bar5 = ax.bar(bar5_x, bar5_y, width = w, color = 'green', alpha=opacity, align='center')
+
+        # bar1 = ax.errorbar(bar1_x, bar1_y, [bar1_q25[0], bar1_q75[0]], color = 'k')
+        # print(bar1_q25)
+        # exit()
+        errbar1 = ax.errorbar(np.expand_dims(bar1_x[0], axis=-1), np.expand_dims(bar1_y[0], axis=-1), yerr=np.expand_dims([bar1_q25[0], bar1_q75[0]], axis=-1), color = 'darkslategray') 
+        errbar2 = ax.errorbar(np.expand_dims(bar2_x[0], axis=-1), np.expand_dims(bar2_y[0], axis=-1), yerr=np.expand_dims([bar2_q25[0], bar2_q75[0]], axis=-1), color = 'darkslategray')
+        errbar3 = ax.errorbar(np.expand_dims(bar3_x[0], axis=-1), np.expand_dims(bar3_y[0], axis=-1), yerr=np.expand_dims([bar3_q25[0], bar3_q75[0]], axis=-1), color = 'darkslategray')
+        errbar4 = ax.errorbar(np.expand_dims(bar4_x[0], axis=-1), np.expand_dims(bar4_y[0], axis=-1), yerr=np.expand_dims([bar4_q25[0], bar4_q75[0]], axis=-1), color = 'darkslategray')
+        errbar5 = ax.errorbar(np.expand_dims(bar5_x[0], axis=-1), np.expand_dims(bar5_y[0], axis=-1), yerr=np.expand_dims([bar5_q25[0], bar5_q75[0]], axis=-1), color = 'darkslategray')
+
+        ax.axvline(0.5, linestyle='--', c='k')
+        # ax.set_xlim(-1, len(bar1_x)+0.2)
+        ax.set_ylim(0, 1.02)
+    fig.legend( (bar1, bar2, bar3, bar4, bar5), ('Toluene', 'Ammonia', 'Acetone', 'Benzene', 'Methane'), loc = 'upper right')#, fontsize=fsize)
+    ax.set_ylabel('Jaccard Similarity Coefficient')#, fontsize=fsize); 
+    ax.set_xticks(xticks, xtick_labels)#, fontsize=fsize)
+    plt.grid(axis='y')
+    plt.savefig(results_dir +  "fig_comparison_new_median.png", dpi=300, bbox_inches='tight')
+    plt.savefig(results_dir + "fig_comparison_new_median.svg", bbox_inches='tight')
+    plt.show()
+    plt.close()
