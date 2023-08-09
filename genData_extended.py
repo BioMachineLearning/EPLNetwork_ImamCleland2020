@@ -5,7 +5,7 @@
 # 
 # Modified by Nik Dennler, October 2022, n.dennler2@herts.ac.uk
 # 
-# ATTENTION: Run with Python 2.7!
+# ATTENTION: Run with Python 3!
 
 import os
 import csv
