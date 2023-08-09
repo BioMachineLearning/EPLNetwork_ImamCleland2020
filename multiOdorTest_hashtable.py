@@ -73,7 +73,7 @@ if __name__ == '__main__':
             continue
         dst = pickle_files + "/" + file
         print(dst)
-        results_dir = "./results_hashtable/" + file[:-3] + "/"
+        results_dir = "./results/results_hashtable/" + file[:-3] + "/"
         print(results_dir)
         if not os.path.exists(results_dir):
             os.mkdir(results_dir)
