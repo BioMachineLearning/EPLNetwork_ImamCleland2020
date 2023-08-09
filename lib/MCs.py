@@ -1,7 +1,7 @@
 import lib.neuron as neuron
 # import neuron
 import numpy as np
-
+ 
 class MC():
     def __init__(self, ID):
         self.ID = ID; 

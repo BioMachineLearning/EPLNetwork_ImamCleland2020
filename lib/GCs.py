@@ -9,7 +9,7 @@ import lib.neuron as neuron
 # import neuron
 import numpy as np
 np.random.seed(1)
-
+ 
 class GC():
     def __init__(self, nMCs, idx):
         np.random.seed(1);    # For keeping the simulation reproducible across subsequent experiment

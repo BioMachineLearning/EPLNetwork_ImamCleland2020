@@ -4,7 +4,7 @@ new_rc_params = {"text.usetex": False, "svg.fonttype": "none"}
 mpl.rcParams.update(new_rc_params)
 import numpy as np
 from lib.helpers import get_barlabel_from_histbar
-
+ 
 def plotFigure3b(gammaCode): 
     plt.figure(1, figsize=(6, 20))
     nGamma = 5; 
@@ -332,7 +332,7 @@ def plotFigure5g(gammaCode, sMatrix):
     plt.savefig("results/fig_5g.png", dpi=300)
     plt.close()
 
-def plot_similarity_comparison(sMatrix_all, experiments, results_dir): 
+def plot_similarity_comparison(sMatrix_all, experiments, results_dir, name): 
     fig, ax = plt.subplots(figsize=(18/1.4, 5/1.4))
     xticks = []
     xtick_labels = []
@@ -374,8 +374,8 @@ def plot_similarity_comparison(sMatrix_all, experiments, results_dir):
     ax.set_ylabel('Jaccard Similarity Coefficient')
     ax.set_xticks(xticks, xtick_labels)
     plt.grid(axis='y')
-    plt.savefig(results_dir +  "fig_comparison.png", dpi=300, bbox_inches='tight')
-    plt.savefig(results_dir + "fig_comparison.svg", bbox_inches='tight')
+    plt.savefig(results_dir +  "similarities_" + name + ".png", dpi=300, bbox_inches='tight')
+    plt.savefig(results_dir + "similarities_" + name + ".svg", bbox_inches='tight')
     plt.show()
     plt.close()
 

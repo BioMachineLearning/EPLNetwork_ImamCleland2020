@@ -5,7 +5,7 @@
 # 
 # Modified by Nik Dennler, October 2022, n.dennler2@herts.ac.uk
 # 
-
+ 
 import numpy as np
 
 def jaccardSimilarity(l1 = [], l2 =[]):

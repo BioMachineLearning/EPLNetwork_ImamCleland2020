@@ -1,6 +1,6 @@
 import math
 import numpy as np
-
+ 
 def get_digits(n):
     """
     Returns the number of digits in a given integer.

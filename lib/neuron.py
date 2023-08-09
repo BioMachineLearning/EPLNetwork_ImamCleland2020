@@ -1,5 +1,5 @@
 import numpy as np
-
+ 
 class iaf:
     def __init__(self):
         self.theta = 1.01;        
