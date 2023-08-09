@@ -25,7 +25,7 @@ def computeSimilarity(l1, l2):
 
 def findLearnedGammaCode(gammaCode, nOdors, nGammaPerLearning):
     learnedGammaCode = [];  
-    for i in range(1, nOdors+1):
+    for i in range(1, int(nOdors)+1):
         labelGammaID = i*nGammaPerLearning + 5*i - 1; 
         learnedGammaCode.append(gammaCode[labelGammaID]); 
     return learnedGammaCode; 
@@ -35,7 +35,7 @@ def findSImatrixGamma(gammaCode, learnedGammaCode, nOdors, testStartID):
     k = 0; 
     for i in range(testStartID, len(gammaCode)):
         SImatrixGamma.append([]); 
-        for j in range(0, nOdors): 
+        for j in range(0, int(nOdors)): 
             similarity = computeSimilarity(gammaCode[i], learnedGammaCode[j]);
             SImatrixGamma[k].append(round(similarity, 2));
         #print(SImatrixGamma[k]); 
@@ -46,7 +46,7 @@ def findPrediction(SImatrixGamma, nTotalTests, nGammaPerOdor=5):
     pValues = []; 
     pThreshold = 0.8;
     #pThreshold = 0.1; 
-    for i in range(0, nTotalTests):
+    for i in range(0, int(nTotalTests)):
         gammaID = (i+1)*nGammaPerOdor - 1; 
         lastGamma = SImatrixGamma[gammaID]; 
         maxSI = max(lastGamma);
@@ -144,7 +144,7 @@ def readoutPlume(gammaCode, nOdors, odorLabels, nSniffsPerPlume=10):
 
 def readoutNoiseScan(pValues, nOdors, nTestPerNoise, nNoise): 
     cValues = [];
-    for i in range(0, nNoise):
+    for i in range(0, int(nNoise)):
         indexStart = i*nTestPerNoise*nOdors; 
         indexEnd = indexStart + nTestPerNoise*nOdors;
         pValuesTemp = pValues[indexStart:indexEnd];

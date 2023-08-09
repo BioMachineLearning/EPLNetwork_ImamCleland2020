@@ -5,7 +5,8 @@
 # 
 # Modified by Nik Dennler, 2022, n.dennler2@herts.ac.uk
 
-import neuron
+import lib.neuron as neuron
+# import neuron
 import numpy as np
 np.random.seed(1)
 
@@ -28,12 +29,12 @@ class GC():
         self.MC_delivery_time = {}
 
     def reset(self):
-        for i in self.MC_delivery_time.keys():
+        for i in self.MC_delivery_time.copy().keys():
             del self.MC_delivery_time[i];
             
     def differentiate(self): 
         self.plastic = 0;  
-        for i in self.GC.w.keys():
+        for i in self.GC.w.copy().keys():
             if self.GC.w[i] <= self.MC_GC_wInit: 
                 del self.GC.w[i];
         
@@ -56,14 +57,14 @@ class GC():
         
     def update_MC_spike_delivery(self, spiking_MCs):
         out = []
-        for i in self.MC_delivery_time.keys():
+        for i in self.MC_delivery_time.copy().keys():
             if self.MC_delivery_time[i] == 0:
                 out.append(i)
                 del self.MC_delivery_time[i]
             else:
                 self.MC_delivery_time[i] = self.MC_delivery_time[i] - 1
         for i in spiking_MCs:
-            if i in self.MC_delay.keys():
+            if i in self.MC_delay.copy().keys():
                 self.MC_delivery_time[i] = self.MC_delay[i];
         return out
 

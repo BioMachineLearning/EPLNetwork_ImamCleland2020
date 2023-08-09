@@ -5,7 +5,7 @@
 # 
 # Modified by Nik Dennler, 2022, n.dennler2@herts.ac.uk
 # 
-# ATTENTION: Run with Python 2.7!
+# ATTENTION: Run with Python 3!
 
 import time
 import numpy as np
@@ -19,7 +19,6 @@ from lib import plots
 import pickle
 
 pickle_files = './pickle_files'
-# pickle_files = './pickle_files_cleverclassifier'
 
 print(os.path.isdir(pickle_files))
 
@@ -30,7 +29,7 @@ for file in os.listdir(pickle_files):
         continue
     dst = pickle_files + "/" + file
     print(dst)
-    results_dir = "./results_epl/" + file[:-3] + "/"
+    results_dir = "./results_epl_py3/" + file[:-3] + "/"
     print(results_dir)
     if not os.path.exists(results_dir):
         os.mkdir(results_dir)
@@ -100,6 +99,6 @@ for file in os.listdir(pickle_files):
     print(odorClassification)
     print(netClassification)
 
-    exit()
+    # exit()
 
 

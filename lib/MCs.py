@@ -1,4 +1,5 @@
-import neuron
+import lib.neuron as neuron
+# import neuron
 import numpy as np
 
 class MC():
@@ -54,7 +55,7 @@ class MC():
 
     def updateInhibitoryStates(self, localGCspikes, timestamp):    
         self.reboundInhibitions = [];              
-        for i in self.blockingInhibitions.keys():
+        for i in self.blockingInhibitions.copy().keys():
             self.blockingInhibitions[i] = self.blockingInhibitions[i] - 1;
             if(self.blockingInhibitions[i]<=0):
                 del self.blockingInhibitions[i];
@@ -116,10 +117,10 @@ class MClayer():
         nNeurogenesis = nGCs/GCsPerNeurogenesis; 
         for i in range(0, nMCs):
             self.MCs.append(MC(ID=i))
-            for j in range(0, nNeurogenesis):
+            for j in range(0, int(nNeurogenesis)):
                 GCidStart = j*GCsPerNeurogenesis+i*GCs_per_Neurogenesis_per_MC; 
                 GCidStop = GCidStart + GCs_per_Neurogenesis_per_MC;
-                for k in range(GCidStart, GCidStop):
+                for k in range(int(GCidStart), int(GCidStop)):
                     self.MCs[i].initSynapse(k);
 
     def reset(self):

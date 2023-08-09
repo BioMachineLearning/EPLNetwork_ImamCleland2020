@@ -170,12 +170,12 @@ def plotFigure4d(gammaCode, sMatrix, results_dir):
     for i in range(0,10):
         #Raster plot
         plt.subplot(5, 4, 2*i+1);
-        odorID = rasterOrderOdors[i];  
+        odorID = int(rasterOrderOdors[i]);  
         sniffID = nOdors*2 + nTestPerOdor*odorID + sampleNumbers[odorID];
-        for j in range(0, nGamma): 
-            gammaID = nGamma*sniffID + j; 
+        for j in range(0, int(nGamma)): 
+            gammaID = int(nGamma*sniffID + j); 
             for k in range(0, nMCs):
-                if(gammaCode[gammaID][k] != 0): 
+                if(gammaCode[int(gammaID)][k] != 0): 
                     spikeTime = 20 - gammaCode[gammaID][k] + 40*j;
                     plt.scatter(spikeTime, k, color='k', s=2); 
         plt.title(plotTitles[i], fontsize=fsize2); 
@@ -189,7 +189,7 @@ def plotFigure4d(gammaCode, sMatrix, results_dir):
         #Similarity plot
         plt.subplot(5, 4, 2*i+2);
         bar_y = []; 
-        gammaID = odorID*nTestPerOdor*nGamma + sampleNumbers[odorID]*nGamma; 
+        gammaID = int(odorID*nTestPerOdor*nGamma + sampleNumbers[odorID]*nGamma); 
         for j in range(0, 5): 
             bar_y.append(sMatrix[gammaID+j][odorID]); 
         plt.bar([40, 80, 120, 160, 200], bar_y, color='black', width=10.0);
@@ -332,114 +332,6 @@ def plotFigure5g(gammaCode, sMatrix):
     plt.savefig("results/fig_5g.png", dpi=300)
     plt.close()
 
-
-
-# def plot_similarity_comparison(sMatrix_all, experiments, results_dir): 
-#     # Python 3
-#     fix, ax = plt.subplots(figsize=(18/1.4, 5/1.4))
-#     xticks = []
-#     xtick_labels = []
-#     for i, (sMatrix, experiment) in enumerate(zip(sMatrix_all, experiments)):
-#         bar1_x, bar2_x, bar3_x, bar4_x, bar5_x = [], [], [], [], []; 
-#         bar1_e, bar2_e, bar3_e, bar4_e, bar5_e = [], [], [], [], []; 
-             
-#         bar1_y, bar2_y, bar3_y, bar4_y, bar5_y = [], [], [], [], [];    
-#         bar1_q25, bar2_q25, bar3_q25, bar4_q25, bar5_q25 = [], [], [], [], [];    
-#         bar1_q75, bar2_q75, bar3_q75, bar4_q75, bar5_q75 = [], [], [], [], [];    
-          
-#         # nGamma = 5;
-#         n_test = 10
-#         gamma = 5; 
-#         testOdorID = 0;              #sniff ID of test odor 
-#         # for i in range(0, nGamma):
-#         # for i in range(nGamma-1, nGamma):
-#         test1_gamma = sMatrix[gamma-1:(testOdorID+1)*(gamma)*n_test:gamma]
-#         # print(toluene_gamma5.shape)
-#         # exit()
-#         bars = np.median(test1_gamma,axis=0)
-#         std = np.std(test1_gamma, axis=0)
-#         q25 = np.median(test1_gamma, axis=0) - np.quantile(test1_gamma, axis=0, q=0.25)
-#         q75 = - np.median(test1_gamma, axis=0) + np.quantile(test1_gamma, axis=0, q=0.75)
-
-#         bar1_y.append(bars[0]);  # Toluene
-#         bar2_y.append(bars[4]);  # Ammonia
-#         bar3_y.append(bars[5]);  # Acetone
-#         bar4_y.append(bars[1]);  # Benzene
-#         bar5_y.append(bars[2]);  # Methane
-
-
-#         bar1_e.append(std[0]);  # Toluene
-#         bar2_e.append(std[4]);  # Ammonia
-#         bar3_e.append(std[5]);  # Acetone
-#         bar4_e.append(std[1]);  # Benzene
-#         bar5_e.append(std[2]);  # Methane
-#         bar1_q25.append(q25[0]);  # Toluene
-#         bar2_q25.append(q25[4]);  # Ammonia
-#         bar3_q25.append(q25[5]);  # Acetone
-#         bar4_q25.append(q25[1]);  # Benzene
-#         bar5_q25.append(q25[2]);  # Methane
-#         bar1_q75.append(q75[0]);  # Toluene
-#         bar2_q75.append(q75[4]);  # Ammonia
-#         bar3_q75.append(q75[5]);  # Acetone
-#         bar4_q75.append(q75[1]);  # Benzene
-#         bar5_q75.append(q75[2]);  # Methane
-
-#         # bar1_y.append(sMatrix[testOdorID+Gamma-1][0]);  # Toluene
-#         # bar2_y.append(sMatrix[testOdorID+Gamma-1][4]);  # Ammonia
-#         # bar3_y.append(sMatrix[testOdorID+Gamma-1][5]);  # Acetone
-#         # bar4_y.append(sMatrix[testOdorID+Gamma-1][1]);  # Benzene
-#         # bar5_y.append(sMatrix[testOdorID+Gamma-1][2]);  # Methane
-        
-#         w = 0.15        #width of bars
-#         fsize = 14;
-
-#         # for i in range(0, 5):    
-#         # for i in range(nGamma-1, nGamma):
-#         bar1_x.append(i-2*w)
-#         bar2_x.append(i-w);
-#         bar3_x.append(i);
-#         bar4_x.append(i+w); 
-#         bar5_x.append(i+2*w);     
-#         xticks.append(i)
-#         # xtick_labels.append(str(i+1))
-#         xtick_labels.append(experiment)
-        
-        
-#         fig = plt.subplot(111)
-#         opacity = 0.5; 
-#         # bar1 = ax.bar(np.expand_dims(bar1_x[0], axis=-1), np.expand_dims(bar1_y[0], axis=-1), yerr=np.expand_dims([bar1_q25[0], bar1_q75[0]], axis=-1), width = w, color = 'blue', alpha = opacity, align='center')
-#         # bar2 = ax.bar(np.expand_dims(bar2_x[0], axis=-1), np.expand_dims(bar2_y[0], axis=-1), yerr=np.expand_dims([bar2_q25[0], bar2_q75[0]], axis=-1), width = w, color = 'violet', alpha = opacity, align='center')
-#         # bar3 = ax.bar(np.expand_dims(bar3_x[0], axis=-1), np.expand_dims(bar3_y[0], axis=-1), yerr=np.expand_dims([bar3_q25[0], bar3_q75[0]], axis=-1), width = w, color = 'red', alpha = opacity, align='center')
-#         # bar4 = ax.bar(np.expand_dims(bar4_x[0], axis=-1), np.expand_dims(bar4_y[0], axis=-1), yerr=np.expand_dims([bar4_q25[0], bar4_q75[0]], axis=-1), width = w, color = 'orange', alpha = opacity, align='center')
-#         # bar5 = ax.bar(np.expand_dims(bar5_x[0], axis=-1), np.expand_dims(bar5_y[0], axis=-1), yerr=np.expand_dims([bar5_q25[0], bar5_q75[0]], axis=-1), width = w, color = 'green', alpha = opacity, align='center')
-
-#         bar1 = ax.bar(bar1_x, bar1_y, width = w, color = 'blue', alpha = opacity, align='center')
-#         bar2 = ax.bar(bar2_x, bar2_y, width = w, color = 'violet', alpha = opacity, align='center')
-#         bar3 = ax.bar(bar3_x, bar3_y, width = w, color = 'red', alpha = opacity, align='center')
-#         bar4 = ax.bar(bar4_x, bar4_y, width = w, color = 'orange', alpha=opacity, align='center')
-#         bar5 = ax.bar(bar5_x, bar5_y, width = w, color = 'green', alpha=opacity, align='center')
-
-#         # bar1 = ax.errorbar(bar1_x, bar1_y, [bar1_q25[0], bar1_q75[0]], color = 'k')
-#         # print(bar1_q25)
-#         # exit()
-#         errbar1 = ax.errorbar(np.expand_dims(bar1_x[0], axis=-1), np.expand_dims(bar1_y[0], axis=-1), yerr=np.expand_dims([bar1_q25[0], bar1_q75[0]], axis=-1), color = 'darkslategray') 
-#         errbar2 = ax.errorbar(np.expand_dims(bar2_x[0], axis=-1), np.expand_dims(bar2_y[0], axis=-1), yerr=np.expand_dims([bar2_q25[0], bar2_q75[0]], axis=-1), color = 'darkslategray')
-#         errbar3 = ax.errorbar(np.expand_dims(bar3_x[0], axis=-1), np.expand_dims(bar3_y[0], axis=-1), yerr=np.expand_dims([bar3_q25[0], bar3_q75[0]], axis=-1), color = 'darkslategray')
-#         errbar4 = ax.errorbar(np.expand_dims(bar4_x[0], axis=-1), np.expand_dims(bar4_y[0], axis=-1), yerr=np.expand_dims([bar4_q25[0], bar4_q75[0]], axis=-1), color = 'darkslategray')
-#         errbar5 = ax.errorbar(np.expand_dims(bar5_x[0], axis=-1), np.expand_dims(bar5_y[0], axis=-1), yerr=np.expand_dims([bar5_q25[0], bar5_q75[0]], axis=-1), color = 'darkslategray')
-
-#         ax.axvline(0.5, linestyle='--', c='k')
-#         # ax.set_xlim(-1, len(bar1_x)+0.2)
-#         ax.set_ylim(0, 1.02)
-#     fig.legend( (bar1, bar2, bar3, bar4, bar5), ('Toluene', 'Ammonia', 'Acetone', 'Benzene', 'Methane'), loc = 'upper right')#, fontsize=fsize)
-#     ax.set_ylabel('Jaccard Similarity Coefficient')#, fontsize=fsize); 
-#     ax.set_xticks(xticks, xtick_labels)#, fontsize=fsize)
-#     plt.grid(axis='y')
-#     plt.savefig(results_dir +  "fig_comparison_new_median.png", dpi=300, bbox_inches='tight')
-#     plt.savefig(results_dir + "fig_comparison_new_median.svg", bbox_inches='tight')
-#     plt.show()
-#     plt.close()
-
 def plot_similarity_comparison(sMatrix_all, experiments, results_dir): 
     fig, ax = plt.subplots(figsize=(18/1.4, 5/1.4))
     xticks = []
@@ -499,11 +391,11 @@ def plot_runtimes(t_train_epl_cpu, t_train_epl_loihi, t_train_clever_cpu, t_test
 
     for bar in bars_0:
         barlabel, unit = get_barlabel_from_histbar(bar, ndigits=2)
-        ax[0].annotate(f"{barlabel} {unit}", xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom')
+        ax[0].annotate("{} {}".format(barlabel, unit), xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom')
 
     for bar in bars_1:
         barlabel, unit = get_barlabel_from_histbar(bar, ndigits=2)
-        ax[1].annotate(f"{barlabel} {unit}", xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom')
+        ax[1].annotate("{} {}".format(barlabel, unit), xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom')
     
     ax[0].set_title('Training', fontweight='bold')
     ax[0].set_ylabel('Time [s]')

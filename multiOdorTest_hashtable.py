@@ -8,10 +8,29 @@ class HashTableClassifier():
     # def __init__(self) -> None:
     #     pass
         
-    def train(self, training_data):        
+    def train(self, training_data):
+        """
+        The train method assigns learned odour representations to the given training data.
+
+        Parameters:
+        - training_data (list): A list of training data odours.
+
+        Returns:
+        None
+        """     
         self.learned_odour_representations = {idx: odour for idx, odour in enumerate(training_data)}
 
     def denoise_test(self, testing_data):
+        """
+        The denoise_test method compares each testing odour with the learned odour representations to find the best matching odour.
+        It then assigns the best matching learned odour representation to the denoised_testing_data dictionary.
+
+        Parameters:
+        - testing_data (list): A list of testing data odours.
+
+        Returns:
+        None
+        """
         self.denoised_testing_data = {}
         for idx_test, testing_odour in enumerate(testing_data):
             best_matching, idx_best_matching = 0, None
@@ -24,6 +43,16 @@ class HashTableClassifier():
             self.denoised_testing_data[idx_test] = self.learned_odour_representations[idx_best_matching]
     
     def get_similarity_matrix(self):
+        """
+        The get_similarity_matrix method calculates the similarity between each testing odour and each learned odour representation.
+        It returns a 2D numpy array with the similarity values.
+
+        Parameters:
+        None
+
+        Returns:
+        sMatrix (numpy.ndarray): A 2D numpy array with the similarity values between testing and learned odours.
+        """
         sMatrix = np.zeros((len(self.denoised_testing_data)*5, len(self.learned_odour_representations)))
         for idx_test, testing_odour in self.denoised_testing_data.items():
             for idx_train, training_odour in self.learned_odour_representations.items():
@@ -34,7 +63,6 @@ class HashTableClassifier():
 
 
 if __name__ == '__main__':
-    # pickle_files = './pickle_files_cleverclassifier'
     pickle_files = './pickle_files'
 
     print(os.path.isdir(pickle_files))

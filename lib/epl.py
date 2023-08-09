@@ -7,8 +7,10 @@
 
 class EPL():
     def __init__(self, nMCs = 10, nGCs = 20, GCsPerNeurogenesis=5, gamma_period = 40):
-        import MCs
-        import GCs
+        import lib.MCs as MCs
+        import lib.GCs as GCs
+        # import MCs
+        # import GCs
 
         self.timestamp = 0; 
         self.nMCs = nMCs
@@ -39,7 +41,7 @@ class EPL():
         for i in self.spikingMCs:     
             self.MC_delivery_time[i] = self.MC_spike_delay;         
         delayedMCspikes = [];         
-        for i in self.MC_delivery_time.keys():
+        for i in self.MC_delivery_time.copy().keys():
             if self.MC_delivery_time[i] > 1:
                 self.MC_delivery_time[i] = self.MC_delivery_time[i] - 1; 
             else:
@@ -50,7 +52,7 @@ class EPL():
             self.GC_go[i] = 1; 
         if self.timestamp%self.gp == self.gp-2:
             self.GC_ids[self.timestamp+2] = []
-            for i in self.GC_go.keys():
+            for i in self.GC_go.copy().keys():
                 del self.GC_go[i]
                 self.GC_ids[self.timestamp+2].append(i)
         #Gamma pulse
