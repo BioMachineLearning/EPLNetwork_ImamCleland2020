@@ -5,9 +5,7 @@ import numpy as np
 from lib import plots
 
 class HashTableClassifier():
-    # def __init__(self) -> None:
-    #     pass
-        
+
     def train(self, training_data):
         """
         The train method assigns learned odour representations to the given training data.
