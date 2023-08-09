@@ -1,0 +1,9 @@
+name: py3.10
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy
+  - matplotlib
+prefix: /opt/homebrew/anaconda3/envs/py3.10
