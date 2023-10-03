@@ -13,6 +13,8 @@ import pickle
 import numpy as np
 import random
 import copy
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 
 def loadFile(fileName, time_sample):
@@ -241,7 +243,7 @@ def offset_subtraction(raw, baseline):
     """
     return (np.array(raw)-np.array(baseline)).tolist()
 
-def plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, name):
+def plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, name, OFFSET_SUBTRACTION, NOISE_LEVEL):
     fig, ax = plt.subplots(ncols=2, nrows=1, sharex=True, sharey='col', figsize=(8,5))
     match = np.sum(np.array(trainingOdors[0])==np.array(testingOdors[0]))
     ax[0].scatter(range(len(odors_raw_training[0])), odors_raw_training[0], c='b', alpha=0.5, label=odor_labels_training[0])
@@ -259,7 +261,9 @@ def plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors
     plt.savefig("visualise_data_" + name + ".svg")
     plt.close()
 
-if __name__ == '__main__':
+def run():
+    pickle_files = Path('pickle_files')
+    pickle_files.mkdir(exist_ok=True, parents=True)
 
     # Define experiments
     all_experiments = {
@@ -308,7 +312,7 @@ if __name__ == '__main__':
         TIME_SAMPLE_TEST = params["TIME_SAMPLE_TEST"]
         NOISE_LEVEL = params["NOISE_LEVEL"]
         SAME_BINS = True
-        VISUALISE_DATA = True
+        VISUALISE_DATA = False
 
         experiment_name = "_noise" + str(NOISE_LEVEL) + "_" + TIME_SAMPLE_TRAIN + "s_" + TIME_SAMPLE_TEST + "s_SO_" + str(OFFSET_SUBTRACTION) + "_controltest" + str(SEPARATE_TRAIN_TEST) + "_samebins" + str(SAME_BINS)
         print(experiment_name)
@@ -371,12 +375,138 @@ if __name__ == '__main__':
         else:
             testingOdors = testingOdors
 
-        wf = open("./pickle_files/multiOdorTest" + experiment_name + ".pi", 'wb')
+        # wf = open("./pickle_files/multiOdorTest" + experiment_name + ".pi", 'wb')
+        wf = open(pickle_files.joinpath("multiOdorTest" + experiment_name + ".pi"), 'wb')
         pickle.dump(trainingOdors, wf, protocol=2) 
         pickle.dump(testingOdors, wf, protocol=2)
         wf.close()
 
         if VISUALISE_DATA:
-            plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, experiment_name)
+            plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, experiment_name, OFFSET_SUBTRACTION, NOISE_LEVEL)
 
         print("Done")
+
+
+
+if __name__ == '__main__':
+    run()
+
+    # # Define experiments
+    # all_experiments = {
+    #     "experiment1" : {
+    #         "OFFSET_SUBTRACTION": False,
+    #         "SEPARATE_TRAIN_TEST": False,
+    #         "TIME_SAMPLE_TRAIN": "090",
+    #         "TIME_SAMPLE_TEST": "090",
+    #         "NOISE_LEVEL": 0.6,
+    #     },
+    #     "experiment2" : {
+    #         "OFFSET_SUBTRACTION": False,
+    #         "SEPARATE_TRAIN_TEST": False,
+    #         "TIME_SAMPLE_TRAIN": "015",
+    #         "TIME_SAMPLE_TEST": "015",
+    #         "NOISE_LEVEL": 0.6,
+    #     },
+    #     "experiment3" : {
+    #         "OFFSET_SUBTRACTION": False,
+    #         "SEPARATE_TRAIN_TEST": True,
+    #         "TIME_SAMPLE_TRAIN": "090",
+    #         "TIME_SAMPLE_TEST": "090",
+    #         "NOISE_LEVEL": 0.6,
+    #     },    
+    #     "experiment4" : {
+    #         "OFFSET_SUBTRACTION": True,
+    #         "SEPARATE_TRAIN_TEST": True,
+    #         "TIME_SAMPLE_TRAIN": "090",
+    #         "TIME_SAMPLE_TEST": "090",
+    #         "NOISE_LEVEL": 0.6,
+    #     },
+    #     "experiment5" : {
+    #         "OFFSET_SUBTRACTION": True,
+    #         "SEPARATE_TRAIN_TEST": True,
+    #         "TIME_SAMPLE_TRAIN": "090",
+    #         "TIME_SAMPLE_TEST": "090",
+    #         "NOISE_LEVEL": 0,
+    #     }, 
+    # }
+
+    # # Iterate over experiments
+    # for experiment, params in all_experiments.items():
+    #     OFFSET_SUBTRACTION = params["OFFSET_SUBTRACTION"]
+    #     SEPARATE_TRAIN_TEST = params["SEPARATE_TRAIN_TEST"]
+    #     TIME_SAMPLE_TRAIN = params["TIME_SAMPLE_TRAIN"]
+    #     TIME_SAMPLE_TEST = params["TIME_SAMPLE_TEST"]
+    #     NOISE_LEVEL = params["NOISE_LEVEL"]
+    #     SAME_BINS = True
+    #     VISUALISE_DATA = True
+
+    #     experiment_name = "_noise" + str(NOISE_LEVEL) + "_" + TIME_SAMPLE_TRAIN + "s_" + TIME_SAMPLE_TEST + "s_SO_" + str(OFFSET_SUBTRACTION) + "_controltest" + str(SEPARATE_TRAIN_TEST) + "_samebins" + str(SAME_BINS)
+    #     print(experiment_name)
+    #     random.seed(1)
+
+    #     # Extract data used in paper
+    #     odors_raw_training, odors_raw_training_baseline, odor_labels_training = loadData(dir="training", time_sample=int(TIME_SAMPLE_TRAIN), n_samples=1)
+
+    #     # Subtract Offset
+    #     if OFFSET_SUBTRACTION:
+    #         odors_raw_training = offset_subtraction(odors_raw_training, odors_raw_training_baseline)
+
+    #     #Binning and sparsification
+    #     nBins = 16 
+    #     dRange_train, binSpacing_train = findBinSpacing(odors_raw_training, nBins)
+    #     odorsDense = binData(odors_raw_training, binSpacing_train, dRange_train, nBins)
+    #     odors_training = sparsifyOdors(odorsDense) 
+    #     trainingOdors = []
+    #     for odor in odors_training:
+    #         trainingOdors.append(copy.deepcopy(odor))
+
+    #     # Testing
+    #     nTest = 10
+    #     noiseLevels = [NOISE_LEVEL]
+        
+    #     # Training and Testing on same datapoints
+    #     if not SEPARATE_TRAIN_TEST:
+    #         odors_raw_testing, odors_raw_testing_baseline, odor_labels_testing = loadData(dir="training", time_sample=int(TIME_SAMPLE_TEST), n_samples=1)
+    #         n_occlude = nTest
+
+    #     # Training and Testing on separate datapoints
+    #     else:
+    #         print("train & test on separate data")
+    #         odors_raw_testing, odors_raw_testing_baseline, odor_labels_testing = loadData(dir="testing", time_sample=int(TIME_SAMPLE_TEST), n_samples=nTest)
+    #         n_occlude = 1
+
+    #     if OFFSET_SUBTRACTION:
+    #         odors_raw_testing = offset_subtraction(odors_raw_testing, odors_raw_testing_baseline)
+
+    #     # Binning and sparsification. IMPORTANT: We use same binning for training & testing as in the original paper when plumes are considered. Tried also to re-do binning, but performance drops.
+    #     if SAME_BINS:
+    #         binSpacing = binSpacing_train
+    #         dRange = dRange_train
+    #     else:
+    #         dRange_test, binSpacing_test = findBinSpacing(odors_raw_testing, nBins)
+    #         binSpacing = binSpacing_test
+    #         dRange = dRange_test
+    #     odorsDense = binData(odors_raw_testing, binSpacing, dRange, nBins) 
+    #     odors_testing = sparsifyOdors(odorsDense) 
+    #     nsensors = len(odors_testing[0]) 
+    #     testingOdors = [] 
+    #     for odor in odors_testing:
+    #         testingOdors.append(copy.deepcopy(odor)) 
+
+    #     # Set occlusion level
+    #     if NOISE_LEVEL != 0:
+    #         testingOdors = AddOcclusion(testingOdors, n=n_occlude, pList=noiseLevels)
+
+    #     # Cover case of zero occlusion
+    #     else:
+    #         testingOdors = testingOdors
+
+    #     wf = open("./pickle_files/multiOdorTest" + experiment_name + ".pi", 'wb')
+    #     pickle.dump(trainingOdors, wf, protocol=2) 
+    #     pickle.dump(testingOdors, wf, protocol=2)
+    #     wf.close()
+
+    #     if VISUALISE_DATA:
+    #         plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, experiment_name)
+
+    #     print("Done")

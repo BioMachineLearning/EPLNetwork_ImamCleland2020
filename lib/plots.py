@@ -374,8 +374,12 @@ def plot_similarity_comparison(sMatrix_all, experiments, results_dir, name):
     ax.set_ylabel('Jaccard Similarity Coefficient')
     ax.set_xticks(xticks, xtick_labels)
     plt.grid(axis='y')
-    plt.savefig(results_dir +  "similarities_" + name + ".png", dpi=300, bbox_inches='tight')
-    plt.savefig(results_dir + "similarities_" + name + ".svg", bbox_inches='tight')
+    # plt.savefig(results_dir +  "similarities_" + name + ".png", dpi=300, bbox_inches='tight')
+    # plt.savefig(results_dir + "similarities_" + name + ".svg", bbox_inches='tight')
+    plt.savefig(results_dir.joinpath("similarities_" + name + ".png"), dpi=300, bbox_inches='tight')
+    plt.savefig(results_dir.joinpath("similarities_" + name + ".svg"), bbox_inches='tight')
+
+
     plt.show()
     plt.close()
 
@@ -404,6 +408,9 @@ def plot_runtimes(t_train_epl_cpu, t_train_epl_loihi, t_train_clever_cpu, t_test
     ax[1].set_title('Inference', fontweight='bold')
     ax[1].spines[['right', 'top']].set_visible(False)
 
-    plt.savefig(results_dir + "timings.png", dpi=300)
-    plt.savefig(results_dir + "timings.svg")
+    # plt.savefig(results_dir + "timings.png", dpi=300)
+    # plt.savefig(results_dir + "timings.svg")
+    plt.savefig(results_dir.joinpath("timings.png"), dpi=300)
+    plt.savefig(results_dir.joinpath("timings.svg"))
+
     plt.show()    
