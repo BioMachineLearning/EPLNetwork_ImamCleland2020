@@ -64,7 +64,7 @@ def get_barlabel_from_histbar(bar, ndigits=2):
     Output: (0.123, 'ms')
     """
     barlabel = bar.get_height()
-    print(barlabel)
+    # print(barlabel)
     if barlabel >= 1:
         barlabel = np.round(barlabel, 1)
         unit = 's'

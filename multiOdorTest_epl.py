@@ -22,37 +22,26 @@ import pickle
 
 
 
-def run():
-    pickle_files = './pickle_files'
-    assert os.path.isdir(pickle_files)
+def run(dir_pickle_files, results_dir_parent):
 
-    results_dir_parent = Path("./results/results_epl/")
     results_dir_parent.mkdir(exist_ok=True, parents=True)
 
     train_times = {}
     test_times = {}
     # Iterate over pickle_files with training/testing data for all experiments
-    for file in os.listdir(pickle_files):
+    # for file in os.listdir(dir_pickle_files):
+    for i, file in enumerate(dir_pickle_files.iterdir()):
+        print(i, file.stem)
 
-        if file[0]=='.':
+        if file.name[0]=='.':
             continue
-        dst = pickle_files + "/" + file
-        name = name = dst.split('/')[-1][:-3]
-        #print(dst)
+
+        dst = file
+        name = dst.name.split('/')[-1][:-3]
 
         # Make results dir
-        results_dir = results_dir_parent.joinpath(file[:-3])
-        print(results_dir)
+        results_dir = results_dir_parent.joinpath(file.stem)
         results_dir.mkdir(exist_ok=True, parents=True)
-
-        # results_dir = Path("./results/results_epl/" + file[:-3] + "/")
-        # #print(results_dir)
-        # if not results_dir.exists():
-        #     results_dir.mkdir(exist_ok=True, parents=True)
-        # # if not os.path.exists(results_dir):
-        # #     os.mkdir(results_dir)
-        
-        # name = dst.split('/')[-1].split('.')[0]
 
         # Load training and testing arrays
         rf = open(dst, "rb")
@@ -81,34 +70,29 @@ def run():
             epl.reset() 
 
         #Training
-        start_time = time.time() 
+        t0 = time.time() 
         for i in range(0, len(trainingOdors)):
-            print("Training odor " + str(i+1)) 
+            # print("Training odor " + str(i+1)) 
             sniff(trainingOdors[i], learn_flag=1)
             epl.GClayer.invokeNeurogenesis()
             sniff(trainingOdors[i], learn_flag=0)
-        train_time = (time.time()-start_time)/len(trainingOdors)
+        t1 = time.time()
         #Testing
         for i in range(0, len(testOdors)):
             sniff(testOdors[i], learn_flag=0)
-            if(i%10==0 and i!=0):
-                print(str(i) + " odors tested")
-        test_time = (time.time()-start_time-train_time)/len(testOdors)
-        train_times[name] = train_time
-        test_times[name] = test_time
+            # if(i%10==0 and i!=0):
+            #     print(str(i) + " odors tested")
+        t2 = time.time()
+        train_time = t1-t0
+        test_time = t2-t1
+        train_times[name] = train_time/len(trainingOdors)
+        test_times[name] = test_time/len(testOdors)
 
-        # print("Simulation Duration = " + str(t3-t1) + "s")
-        print("Training Duration = " + str(train_time) + "s")
-        print("Testing Duration = " + str(test_time) + "s")
+        print("Training Duration total = " + str(train_time) + "s")
+        print("Testing Duration total = " + str(test_time) + "s")
 
         #Readout
         sMatrix, odorClassification, netClassification = readout(epl.gammaCode, nOdors, nTestPerOdor)  
-
-        # Save outputs
-        # np.save(results_dir + "sMatrix.npy", np.array(sMatrix))
-        # np.save(results_dir + "odorClassification.npy", np.array(odorClassification))
-        # np.save(results_dir + "netClassification.npy", np.array(netClassification))
-        # np.save(results_dir + "gammaCode.npy", np.array(epl.gammaCode))
 
         np.save(results_dir.joinpath("sMatrix.npy"), np.array(sMatrix))
         np.save(results_dir.joinpath("odorClassification.npy"), np.array(odorClassification))
@@ -120,13 +104,12 @@ def run():
         # plots.plotFigure4b(sMatrix, results_dir)
         # plots.plotFigure4d(epl.gammaCode, sMatrix, results_dir)
 
-        print("done")
-        # print(odorClassification)
-        # print(netClassification)
-
-        # exit()
+        # break
+    
     json.dump(train_times, open(results_dir_parent.joinpath("train_times.json"), "w"))
     json.dump(test_times, open(results_dir_parent.joinpath("test_times.json"), "w"))
     
 if __name__ == '__main__':
-    run()
+    dir_pickle_files = Path('pickle_files_current')
+    dir_results = Path('results_current')
+    run(dir_pickle_files, (dir_results / 'results_epl'))

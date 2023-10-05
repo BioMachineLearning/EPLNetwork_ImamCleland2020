@@ -123,7 +123,8 @@ class GClayer():
                     self.GCs[GC_index].MC_delay[(i, j)] = delays[j]; 
                                    
     def connect_all(self, nMCs):
-        print("Testing random-seed: ", np.random.rand()) # For checking reproducibility
+        q = np.random.rand()
+        # print("Testing random-seed: ", q) # For checking reproducibility
         for i in range(0, len(self.GCs)):
             self.connect_GC(i, nMCs);
 

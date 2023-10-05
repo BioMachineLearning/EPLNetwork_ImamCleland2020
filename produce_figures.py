@@ -19,10 +19,7 @@ mpl.rcParams.update(new_rc_params)
 
 from lib.plots import plot_similarity_comparison, plot_runtimes
 
-def run():
-    figures_dir = Path("results/figures/")
-    figures_dir.mkdir(exist_ok=True, parents=True)
-    
+def run(results_dir_parent, figures_dir):    
     # 1. Plot similarity matrices
     files = [
         "multiOdorTest_noise0.6_090s_090s_SO_False_controltestFalse_samebinsTrue.pi",
@@ -44,10 +41,12 @@ def run():
     for file in files:
         if file[0]=='.':
             continue
-        results_dir = Path("./results/results_epl/" + file[:-3] + "/")
-        print(results_dir)
-        if not os.path.exists(results_dir):
-            os.mkdir(results_dir)
+        results_dir = results_dir_parent.joinpath("results_epl", file[:-3])
+        # results_dir = Path("results/results_epl/" + file[:-3] + "/")
+        # print(results_dir)
+        results_dir.mkdir(exist_ok=True, parents=True)
+        # if not os.path.exists(results_dir):
+        #     os.mkdir(results_dir)
         a = np.load(results_dir.joinpath("sMatrix.npy"))
         # a = np.load(results_dir + "SMatrix.npy")
         all_similarities.append(a)
@@ -58,8 +57,9 @@ def run():
     for file in files:
         if file[0]=='.':
             continue
-        results_dir = Path("./results/results_hashtable/" + file[:-3] + "/")
-        print(results_dir)
+        results_dir = results_dir_parent.joinpath("results_hashtable", file[:-3])
+        # results_dir = Path("./results/results_hashtable/" + file[:-3] + "/")
+        # print(results_dir)
         if not os.path.exists(results_dir):
             os.mkdir(results_dir)
         a = np.load(results_dir.joinpath("sMatrix.npy"))
@@ -82,16 +82,25 @@ def run():
     # t_test_clever_cpu = 0.0956 / n_test         # Measured on a Macbook Pro (Apple M1 Pro)
 
     # # Training runtimes
-    t_train_epl_cpu = np.mean(list(json.load(open("./results/results_epl/train_times.json", "r")).values()))#["multiOdorTest_noise0.6_090s_090s_SO_False_controltestFalse_samebinsTrue"]
+    # results_dir.joinpath("results_epl", "train_times.json")
+    # t_train_epl_cpu = np.mean(list(json.load(open("./results/results_epl/train_times.json", "r")).values()))#["multiOdorTest_noise0.6_090s_090s_SO_False_controltestFalse_samebinsTrue"]
+    t_train_epl_cpu = np.mean(list(json.load(open(results_dir_parent.joinpath("results_epl", "train_times.json"), "r")).values()))
     t_train_epl_loihi = 2.0*1e-3                # From paper
-    t_train_clever_cpu = np.mean(list(json.load(open("./results/results_hashtable/train_times.json", "r")).values()))#["multiOdorTest_noise0.6_090s_090s_SO_False_controltestFalse_samebinsTrue"]
+    # t_train_clever_cpu = np.mean(list(json.load(open("./results/results_hashtable/train_times.json", "r")).values()))#["multiOdorTest_noise0.6_090s_090s_SO_False_controltestFalse_samebinsTrue"]
+    t_train_clever_cpu = np.mean(list(json.load(open(results_dir_parent.joinpath("results_hashtable", "train_times.json"), "r")).values()))
 
     # # Testing runtimes
-    t_test_epl_cpu = np.mean(list(json.load(open("./results/results_epl/test_times.json", "r")).values()))#["multiOdorTest_noise0.6_090s_090s_SO_False_controltestFalse_samebinsTrue"]
+    # t_test_epl_cpu = np.mean(list(json.load(open("./results/results_epl/test_times.json", "r")).values()))#["multiOdorTest_noise0.6_090s_090s_SO_False_controltestFalse_samebinsTrue"]
+    t_test_epl_cpu = np.mean(list(json.load(open(results_dir_parent.joinpath("results_epl", "test_times.json"), "r")).values()))
     t_test_epl_loihi = 2.0*1e-3                 # From paper
-    t_test_clever_cpu = np.mean(list(json.load(open("./results/results_hashtable/test_times.json", "r")).values()))#["multiOdorTest_noise0.6_090s_090s_SO_False_controltestFalse_samebinsTrue"]
-
+    # t_test_clever_cpu = np.mean(list(json.load(open("./results/results_hashtable/test_times.json", "r")).values()))#["multiOdorTest_noise0.6_090s_090s_SO_False_controltestFalse_samebinsTrue"]
+    t_test_clever_cpu = np.mean(list(json.load(open(results_dir_parent.joinpath("results_hashtable", "test_times.json"), "r")).values()))
+    
     plot_runtimes(t_train_epl_cpu, t_train_epl_loihi, t_train_clever_cpu, t_test_epl_cpu, t_test_epl_loihi, t_test_clever_cpu, figures_dir)
 
 if __name__ == '__main__':
-    run()
+    results_dir = Path("results_current/")
+    figures_dir = Path("results/figures/")
+    figures_dir.mkdir(exist_ok=True, parents=True)
+
+    run(results_dir, figures_dir)

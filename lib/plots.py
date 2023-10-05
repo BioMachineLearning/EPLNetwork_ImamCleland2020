@@ -379,7 +379,6 @@ def plot_similarity_comparison(sMatrix_all, experiments, results_dir, name):
     plt.savefig(results_dir.joinpath("similarities_" + name + ".png"), dpi=300, bbox_inches='tight')
     plt.savefig(results_dir.joinpath("similarities_" + name + ".svg"), bbox_inches='tight')
 
-
     plt.show()
     plt.close()
 

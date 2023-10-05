@@ -62,30 +62,28 @@ class HashTableClassifier():
                     sMatrix[5*idx_test+i, idx_train] = similarity
         return sMatrix
 
-def run():
-    pickle_files = './pickle_files'
-    assert os.path.isdir(pickle_files)
+# def run():
+def run(dir_pickle_files, results_dir_parent):
 
-    results_dir_parent = Path("./results/results_hashtable/")
     results_dir_parent.mkdir(exist_ok=True, parents=True)
+    assert os.path.isdir(dir_pickle_files)
 
     # Iterate over pickle_files with training/testing data for all experiments
     train_times = {}
     test_times = {}
-    for file in os.listdir(pickle_files):
-        if file[0]=='.':
+    for i, file in enumerate(dir_pickle_files.iterdir()):
+        print(i, file.stem)
+
+        if file.name[0]=='.':
             continue
-        dst = pickle_files + "/" + file
-        name = dst.split('/')[-1][:-3]#.split('.')[0]
-        # print(dst, name)
-        # continue
+
+        dst = file
+        name = dst.name.split('/')[-1][:-3]
 
         # Make results dir
-        results_dir = results_dir_parent.joinpath(file[:-3])
-        print(results_dir)
+        results_dir = results_dir_parent.joinpath(file.stem)
         results_dir.mkdir(exist_ok=True, parents=True)
         
-
         # Load training and testing arrays
         rf = open(dst, "rb")
         trainingOdors = np.array(pickle.load(rf))
@@ -100,80 +98,35 @@ def run():
         hashtable_classifier = HashTableClassifier()
 
         # Run training
-        start_time = time.time()
+        t0 = time.time()
         hashtable_classifier.train(trainingOdors)
-        train_time = (time.time()-start_time)/len(trainingOdors)
+        t1 = time.time()
 
         # Run testing
         denoised_test = hashtable_classifier.denoise_test(testOdors)
-        test_time = (time.time()-start_time-train_time)/len(testOdors)
-        print(train_time, test_time)#/len(testOdors))
-        train_times[name] = train_time
-        test_times[name] = test_time
+        t2 = time.time()
+        train_time = t1-t0
+        test_time = t2-t1
+
+        train_times[name] = train_time/len(trainingOdors)
+        test_times[name] = test_time/len(testOdors)
+
+        print("Training Duration total = " + str(train_time) + "s")
+        print("Testing Duration total = " + str(test_time) + "s")
 
         # Extract similarity matrix
         sMatrix = hashtable_classifier.get_similarity_matrix()
 
         # Save outputs
-        # np.save(results_dir + "sMatrix.npy", np.array(sMatrix))
         np.save(results_dir.joinpath("sMatrix.npy"), np.array(sMatrix))
 
         #plots.plotFigure4b(sMatrix, results_dir)
-        print("done")
+        # print("done")
     
-    # print(train_times)
-    # print(test_times)
-    # exit()
-    # results_dir_parent = Path("./results/results_epl/")
-    # results_dir_parent.mkdir(exist_ok=True, parents=True)
     json.dump(train_times, open(results_dir_parent.joinpath("train_times.json"), "w"))
     json.dump(test_times, open(results_dir_parent.joinpath("test_times.json"), "w"))
 
-
 if __name__ == '__main__':
-    run()
-    # pickle_files = './pickle_files'
-
-    # print(os.path.isdir(pickle_files))
-
-    # # Iterate over pickle_files with training/testing data for all experiments
-    # for file in os.listdir(pickle_files):
-    #     if file[0]=='.':
-    #         continue
-    #     dst = pickle_files + "/" + file
-    #     print(dst)
-    #     results_dir = "./results/results_hashtable/" + file[:-3] + "/"
-    #     print(results_dir)
-    #     if not os.path.exists(results_dir):
-    #         os.mkdir(results_dir)
-        
-    #     name = dst.split('/')[-1].split('.')[0]
-    #     print(name)
-
-    #     # Load training and testing arrays
-    #     rf = open(dst, "rb")
-    #     trainingOdors = np.array(pickle.load(rf))
-    #     testOdors = np.array(pickle.load(rf))
-    #     rf.close()
-
-    #     nOdors = len(trainingOdors) 
-    #     nTestPerOdor = len(testOdors)/nOdors  
-    #     print("Number of odors to train = " + str(len(trainingOdors))) 
-    #     print("Number of odors to test = " + str(len(testOdors))) 
-
-    #     hashtable_classifier = HashTableClassifier()
-    #     start_time = time.time()
-    #     hashtable_classifier.train(trainingOdors)
-    #     train_time = time.time()-start_time
-    #     denoised_test = hashtable_classifier.denoise_test(testOdors)
-    #     test_time = time.time()-start_time-train_time
-    #     print(train_time, test_time)#/len(testOdors))
-    #     sMatrix = hashtable_classifier.get_similarity_matrix()
-
-    #     # Save outputs
-    #     np.save(results_dir + "sMatrix.npy", np.array(sMatrix))
-    #     plots.plotFigure4b(sMatrix, results_dir)
-    #     print("done")
-
-
-
+    dir_pickle_files = Path('pickle_files_current')
+    dir_results = Path('results_current')
+    run(dir_pickle_files, (dir_results / 'results_hashtable'))
