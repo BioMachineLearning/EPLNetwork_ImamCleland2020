@@ -4,8 +4,4 @@ In this repo, we replicate and extend the analysis described in *Imam, N., Clela
 
 Original code can be found here: https://github.com/ModelDBRepository/261864
 
-To reproduce the full analysis, follow those steps:
-1. Run `genData_extended.py`. This will load the data, preprocess if applicable, discretise, and produce pickle files with training and testing data. 
-2. Run `multiOdorTest_epl.py`. For all configurations, this will train the EPL network on the training set, then compute the restored signals as the networks response to the testing set, and finally compute the similarity between the restored and trained.
-3. Run `multiOdorTest_hashtable.py`. For all configurations, this will populate the hash table with data from the the training set, then restore the signal from the testing set based on maximal overlap, and finally compute the similarity between restored and trained.
-4. Run `produce_figures.py`. This will produce Figures 1, 2 and S2 of the manuscript, displaying a comparison of the computed similarities for the different settings as well as of the different runtimes.
+To reproduce the full analysis, simply run the following jupter notebook: `run_all.ipynb`

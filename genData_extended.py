@@ -13,6 +13,8 @@ import pickle
 import numpy as np
 import random
 import copy
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 
 def loadFile(fileName, time_sample):
@@ -82,8 +84,8 @@ def get_gas_files(data_dir, gas, time_sample, n_samples=10):
     
     return raw_all, baseline_all
 
-
-def loadData(time_sample=int('090'), dir="testing", n_samples=10):
+# def loadData(time_sample=int('090'), dir="testing", n_samples=10):
+def loadData(data_dir, time_sample=int('090'), n_samples=10):
     """
     Load training or testing data. Returns raw data, baseline data and labels
 
@@ -93,7 +95,7 @@ def loadData(time_sample=int('090'), dir="testing", n_samples=10):
     :return list, list, list: odors_raw, odors_baseline, odors_labels
     """
 
-    data_dir = "data/"+dir
+    # data_dir = "data/"+dir
 
     Toluene_raw, Toluene_baseline = get_gas_files(data_dir, 'Toluene_200', time_sample, n_samples=n_samples)
     Benzene_raw, Benzene_baseline = get_gas_files(data_dir, 'Benzene_200', time_sample, n_samples=n_samples)
@@ -241,7 +243,7 @@ def offset_subtraction(raw, baseline):
     """
     return (np.array(raw)-np.array(baseline)).tolist()
 
-def plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, name):
+def plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, name, OFFSET_SUBTRACTION, NOISE_LEVEL):
     fig, ax = plt.subplots(ncols=2, nrows=1, sharex=True, sharey='col', figsize=(8,5))
     match = np.sum(np.array(trainingOdors[0])==np.array(testingOdors[0]))
     ax[0].scatter(range(len(odors_raw_training[0])), odors_raw_training[0], c='b', alpha=0.5, label=odor_labels_training[0])
@@ -259,8 +261,11 @@ def plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors
     plt.savefig("visualise_data_" + name + ".svg")
     plt.close()
 
-if __name__ == '__main__':
+def run(dir_data, dir_pickle_files):
 
+    dir_training = str(dir_data.joinpath("training"))
+    dir_testing = str(dir_data.joinpath("testing"))
+    
     # Define experiments
     all_experiments = {
         "experiment1" : {
@@ -301,21 +306,22 @@ if __name__ == '__main__':
     }
 
     # Iterate over experiments
-    for experiment, params in all_experiments.items():
+    for i, (experiment, params) in enumerate(all_experiments.items()):
         OFFSET_SUBTRACTION = params["OFFSET_SUBTRACTION"]
         SEPARATE_TRAIN_TEST = params["SEPARATE_TRAIN_TEST"]
         TIME_SAMPLE_TRAIN = params["TIME_SAMPLE_TRAIN"]
         TIME_SAMPLE_TEST = params["TIME_SAMPLE_TEST"]
         NOISE_LEVEL = params["NOISE_LEVEL"]
         SAME_BINS = True
-        VISUALISE_DATA = True
+        VISUALISE_DATA = False
 
         experiment_name = "_noise" + str(NOISE_LEVEL) + "_" + TIME_SAMPLE_TRAIN + "s_" + TIME_SAMPLE_TEST + "s_SO_" + str(OFFSET_SUBTRACTION) + "_controltest" + str(SEPARATE_TRAIN_TEST) + "_samebins" + str(SAME_BINS)
-        print(experiment_name)
+        print(i, "multiOdorTest" + experiment_name)
         random.seed(1)
 
         # Extract data used in paper
-        odors_raw_training, odors_raw_training_baseline, odor_labels_training = loadData(dir="training", time_sample=int(TIME_SAMPLE_TRAIN), n_samples=1)
+        # odors_raw_training, odors_raw_training_baseline, odor_labels_training = loadData(dir="training", time_sample=int(TIME_SAMPLE_TRAIN), n_samples=1)
+        odors_raw_training, odors_raw_training_baseline, odor_labels_training = loadData(data_dir=dir_training, time_sample=int(TIME_SAMPLE_TRAIN), n_samples=1)
 
         # Subtract Offset
         if OFFSET_SUBTRACTION:
@@ -336,13 +342,13 @@ if __name__ == '__main__':
         
         # Training and Testing on same datapoints
         if not SEPARATE_TRAIN_TEST:
-            odors_raw_testing, odors_raw_testing_baseline, odor_labels_testing = loadData(dir="training", time_sample=int(TIME_SAMPLE_TEST), n_samples=1)
+            odors_raw_testing, odors_raw_testing_baseline, odor_labels_testing = loadData(data_dir=dir_training, time_sample=int(TIME_SAMPLE_TEST), n_samples=1)
             n_occlude = nTest
 
         # Training and Testing on separate datapoints
         else:
-            print("train & test on separate data")
-            odors_raw_testing, odors_raw_testing_baseline, odor_labels_testing = loadData(dir="testing", time_sample=int(TIME_SAMPLE_TEST), n_samples=nTest)
+            # print("train & test on separate data")
+            odors_raw_testing, odors_raw_testing_baseline, odor_labels_testing = loadData(data_dir=dir_testing, time_sample=int(TIME_SAMPLE_TEST), n_samples=nTest)
             n_occlude = 1
 
         if OFFSET_SUBTRACTION:
@@ -371,12 +377,19 @@ if __name__ == '__main__':
         else:
             testingOdors = testingOdors
 
-        wf = open("./pickle_files/multiOdorTest" + experiment_name + ".pi", 'wb')
+        # wf = open("./pickle_files/multiOdorTest" + experiment_name + ".pi", 'wb')
+        wf = open(dir_pickle_files.joinpath("multiOdorTest" + experiment_name + ".pi"), 'wb')
         pickle.dump(trainingOdors, wf, protocol=2) 
         pickle.dump(testingOdors, wf, protocol=2)
         wf.close()
 
         if VISUALISE_DATA:
-            plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, experiment_name)
+            plot_data(odors_raw_training, odors_raw_testing, trainingOdors, testingOdors, odor_labels_training, odor_labels_testing, experiment_name, OFFSET_SUBTRACTION, NOISE_LEVEL)
 
-        print("Done")
+        # print("Done")
+
+
+if __name__ == '__main__':
+    dir_pickle_files = Path('pickle_files_current')
+    dir_pickle_files.mkdir(exist_ok=True, parents=True)
+    run(dir_pickle_files)
